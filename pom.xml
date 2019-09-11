@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>registry</module>
+        <module>pricedata</module>
     </modules>
 
 
