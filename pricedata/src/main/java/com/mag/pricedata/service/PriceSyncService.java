@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class PriceSyncService {
 
     private void retrieveAndSaveTick(Exchange exchange) {
         retrieveTick(exchange)
-                .ifPresent(ticker -> this.saveTick(exchange, ticker));
+                .ifPresent(ticker -> this.saveTick(exchange, ticker).subscribe(tick -> logger.info("Saved tick: {}", tick)));
     }
 
     private Optional<Ticker> retrieveTick(Exchange exchange) {
@@ -54,11 +55,10 @@ public class PriceSyncService {
         }
     }
 
-    private void saveTick(Exchange exchange, Ticker ticker) {
-        Tick tick = tickService.save(
+    private Mono<Tick> saveTick(Exchange exchange, Ticker ticker) {
+        return tickService.save(
                 exchange.getDefaultExchangeSpecification().getExchangeName(),
                 ticker
         );
-        logger.info("Saved tick: " + tick);
     }
 }

@@ -4,6 +4,7 @@ import com.mag.pricedata.entity.Tick;
 import com.mag.pricedata.repository.TickRepository;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class TickService {
@@ -14,7 +15,7 @@ public class TickService {
         this.tickRepository = tickRepository;
     }
 
-    Tick save(final String exchange, Ticker ticker) {
+    Mono<Tick> save(final String exchange, Ticker ticker) {
         Tick tick = new Tick(
                 exchange,
                 ticker.getCurrencyPair().base.getCurrencyCode(),
