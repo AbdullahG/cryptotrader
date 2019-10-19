@@ -6,6 +6,8 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 @Service
 public class TickService {
 
@@ -29,11 +31,19 @@ public class TickService {
                 ticker.getVwap(),
                 ticker.getVolume(),
                 ticker.getQuoteVolume(),
-                ticker.getTimestamp(),
+                nowIfEmpty(ticker.getTimestamp()),
                 ticker.getBidSize(),
                 ticker.getAskSize()
         );
 
         return tickRepository.save(tick);
+    }
+
+    private Date nowIfEmpty(Date date) {
+        if (date == null) {
+            return new Date();
+        } else {
+            return date;
+        }
     }
 }

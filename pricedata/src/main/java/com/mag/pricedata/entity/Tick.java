@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Tick {
@@ -204,5 +205,18 @@ public class Tick {
                 ", bidSize=" + bidSize +
                 ", askSize=" + askSize +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tick tick = (Tick) o;
+        return Objects.equals(id, tick.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, exchange, base, counter, open, last, bid, ask, high, low, vwap, volume, quoteVolume, timestamp, bidSize, askSize);
     }
 }
