@@ -2,7 +2,8 @@ package com.mag.pricedata.api;
 
 import com.mag.pricedata.entity.Tick;
 import com.mag.pricedata.repository.TickRepository;
-import com.mag.pricedata.service.StatefulTickService;
+import com.mag.pricedata.service.TickApiService;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +18,12 @@ import java.util.Date;
 
 @RestController(value = "/api/tick")
 public class TickApi {
-    private TickRepository tickRepository;
-    private StatefulTickService statefulTickService;
+    private final TickRepository tickRepository;
+    private ObjectFactory<TickApiService> statefulTickServiceFactory;
 
-    public TickApi(TickRepository tickRepository, StatefulTickService statefulTickService) {
+    public TickApi(TickRepository tickRepository, ObjectFactory<TickApiService> statefulTickServiceFactory) {
         this.tickRepository = tickRepository;
-        this.statefulTickService = statefulTickService;
+        this.statefulTickServiceFactory = statefulTickServiceFactory;
     }
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -37,6 +38,6 @@ public class TickApi {
     @ResponseBody
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Flux<Tick> getTest() {
-        return statefulTickService.get();
+        return statefulTickServiceFactory.getObject().get();
     }
 }
