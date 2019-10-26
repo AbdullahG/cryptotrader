@@ -12,6 +12,7 @@
     <modules>
         <module>registry</module>
         <module>pricedata</module>
+        <module>trader</module>
     </modules>
 
 </project>
